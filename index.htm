@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stress map - Atlanta</title>
+
+    <!-- Links to supporting files -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- Map Setup -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+      crossorigin=""
+    ></script>
+  </head>
+
+  <body>
+    <h1>Map User location 🎯</h1>
+    <div id="map"></div>
+  </body>
+
+  <script>
+    // Initilze map
+    var map = L.map("map");
+    // Set view (Lat, Long, Zoom)
+    map.setView([33.753746, -84.38633], 13);
+
+    // Add tiles with (lat, long, current zoom) maxZoom, and copyright logo
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+  </script>
+</html>
