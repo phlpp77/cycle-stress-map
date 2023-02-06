@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var coords;
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -12,5 +13,6 @@ var con = mysql.createConnection({
     con.query("SELECT latitude,longitude FROM note", function (err, result, fields) {
       if (err) throw err;
       console.log(result[0].latitude);
+      coords = result[0];
     });
   });
