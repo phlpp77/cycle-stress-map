@@ -1,14 +1,11 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React, { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Icon } from "leaflet";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <h2>
           <b>Stress Map</b> <code>[unstable prototype]</code>
         </h2>
