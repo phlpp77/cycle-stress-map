@@ -12,10 +12,10 @@ const db = mysql.createConnection({
   database: "stress_map_cycle_atl",
 });
 
-// Get coords
-app.get("/coord", (req, res) => {
-  // Query to get all lat and long data from cords table
-  const query = "SELECT latitude,longitude FROM coord";
+// Get notes
+app.get("/note", (req, res) => {
+  // Query to get all lat and long data from note table
+  const query = "SELECT latitude,longitude FROM note";
 
   // Send query to db connection
   db.query(query, (err, data) => {
