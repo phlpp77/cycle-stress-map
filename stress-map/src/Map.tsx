@@ -9,6 +9,7 @@ type note = {
   trip_id: string;
   latitude: number;
   longitude: number;
+  details: string;
 };
 
 function Map(): JSX.Element {
@@ -42,10 +43,14 @@ function Map(): JSX.Element {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
-          
+
           {/* Placing markers at note positions */}
           {coords.map((coord) => (
-            <Marker position={[coord.latitude, coord.longitude]}></Marker>
+            <Marker position={[coord.latitude, coord.longitude]}>
+              <Popup>
+                {coord.details !== "" ? coord.details : "No text added."}
+              </Popup>
+            </Marker>
           ))}
         </MapContainer>
       </header>

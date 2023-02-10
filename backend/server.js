@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 // Get notes
 app.get("/note", (req, res) => {
   // Query to get all lat and long data from note table
-  const query = "SELECT latitude,longitude FROM note";
+  const query = "SELECT latitude,longitude, details FROM note";
 
   // Send query to db connection
   db.query(query, (err, data) => {
