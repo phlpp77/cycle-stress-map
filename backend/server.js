@@ -1,5 +1,6 @@
 import express from "express";
 import mysql from "mysql";
+import cors from "cors";
 
 // Set up express.js server
 const app = express();
@@ -12,6 +13,13 @@ const db = mysql.createConnection({
   database: "stress_map_cycle_atl",
 });
 
+app.use(express.json());
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.json("Backend reached.");
+});
+
 // Get notes
 app.get("/note", (req, res) => {
   // Query to get all lat and long data from note table
@@ -22,10 +30,6 @@ app.get("/note", (req, res) => {
     if (err) return res.json(err); // When error occurs send client error code
     return res.json(data);
   });
-});
-
-app.get("/", (req, res) => {
-  res.json("Backend reached.");
 });
 
 app.listen(8800, () => {
