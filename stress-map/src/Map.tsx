@@ -1,7 +1,14 @@
 import "./Map.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+} from "react-leaflet";
+import { LatLngExpression } from "leaflet";
 
 // TODO: type not complete
 type note = {
@@ -28,6 +35,12 @@ function Map(): JSX.Element {
     fetchAllCoords();
   }, []);
 
+  // Create array to be used in line
+  const lineArray: LatLngExpression[] = coords.map((coord) => [
+    coord.latitude,
+    coord.longitude,
+  ]);
+
   return (
     <div className="Map">
       <header className="Map-header">
@@ -53,6 +66,9 @@ function Map(): JSX.Element {
               </Popup>
             </Marker>
           ))}
+
+          {/* Creating a line based on coords */}
+          <Polyline positions={[lineArray.slice(0, 4)]} />
         </MapContainer>
       </header>
     </div>
