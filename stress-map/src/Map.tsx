@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 // TODO: type not complete
 type note = {
+  id: number;
   user_id: number;
   trip_id: string;
   latitude: number;
@@ -46,7 +47,7 @@ function Map(): JSX.Element {
 
           {/* Placing markers at note positions */}
           {coords.map((coord) => (
-            <Marker position={[coord.latitude, coord.longitude]}>
+            <Marker position={[coord.latitude, coord.longitude]} key={coord.id}>
               <Popup>
                 {coord.details !== "" ? coord.details : "No text added."}
               </Popup>
