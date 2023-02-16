@@ -20,9 +20,17 @@ type note = {
   details: string;
 };
 
+type trip = {
+  id: number;
+  latitude: number;
+  longitude: number;
+};
+
 function Map(): JSX.Element {
+  const [trip, setTrip] = useState<trip[]>([]);
   const [coords, setCoords] = useState<note[]>([]);
 
+  // Fetch all notes from server
   useEffect(() => {
     const fetchAllCoords = async () => {
       try {
@@ -35,8 +43,22 @@ function Map(): JSX.Element {
     fetchAllCoords();
   }, []);
 
+  // Fetch all coords from a certain trip from server
+  useEffect(() => {
+    const fetchTripWithID = async () => {
+      try {
+        const response = await axios.get("http://localhost:8800/trip");
+        setTrip(response.data);
+        console.log("Created line with data");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTripWithID();
+  }, []);
+
   // Create array to be used in line
-  const lineArray: LatLngExpression[] = coords.map((coord) => [
+  const lineArray: LatLngExpression[] = trip.map((coord) => [
     coord.latitude,
     coord.longitude,
   ]);
@@ -68,7 +90,7 @@ function Map(): JSX.Element {
           ))}
 
           {/* Creating a line based on coords */}
-          <Polyline positions={[lineArray.slice(0, 4)]} />
+          <Polyline positions={[lineArray]} />
         </MapContainer>
       </header>
     </div>
