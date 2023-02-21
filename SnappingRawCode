@@ -1,0 +1,42 @@
+// ---------Below is the raw code in backend with nodejs-------------
+// Example of a GET endpoint to retrieve the map data
+app.get('/map', (req, res) => {
+  // Query the database or file system for the map data and send it to the client
+  res.send(mapData);
+});
+
+// Example of a POST endpoint to update the marker location
+app.post('/marker', (req, res) => {
+  // Update the marker location in the database or file system
+  res.sendStatus(200);
+});
+
+// ---------Below is the raw code in frontend with leaflet as framework-------------
+// Load the map data from the Node.js server
+const map = L.map('map').setView([51.505, -0.09], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+  maxZoom: 18,
+}).addTo(map);
+fetch('/map')
+  .then(res => res.json())
+  .then(mapData => {
+    // Create a Leaflet layer from the map data
+    const layer = L.geoJSON(mapData).addTo(map);
+
+    // Create a marker and add it to the map
+    const marker = L.marker([51.5, -0.09], { draggable: true }).addTo(map);
+
+    // Add an event listener to the marker to snap it to a nearby feature
+    marker.on('dragend', (event) => {
+      const nearestFeature = L.GeometryUtil.closestLayer(map, layer, event.target.getLatLng());
+      event.target.setLatLng(nearestFeature.latlng);
+
+      // Update the marker location on the server
+      fetch('/marker', {
+        method: 'POST',
+        body: JSON.stringify({ latlng: event.target.getLatLng() }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
+  });
