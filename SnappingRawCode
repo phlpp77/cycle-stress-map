@@ -27,10 +27,19 @@ fetch('/map')
     // Create a marker and add it to the map
     const marker = L.marker([51.5, -0.09], { draggable: true }).addTo(map);
 
-    // Add an event listener to the marker to snap it to a nearby feature
     marker.on('dragend', (event) => {
-      const nearestFeature = L.GeometryUtil.closestLayer(map, layer, event.target.getLatLng());
-      event.target.setLatLng(nearestFeature.latlng);
+      // Define the size of the grid
+      const gridSize = 10; // 10 meters for example
+
+      // Calculate the snapped coordinates
+      const lat = event.target.getLatLng().lat;
+      const lng = event.target.getLatLng().lng;
+      const snappedLat = Math.round(lat / gridSize) * gridSize;
+      const snappedLng = Math.round(lng / gridSize) * gridSize;
+      const snappedLatLng = L.latLng(snappedLat.toFixed(6), snappedLng.toFixed(6));
+
+      // Move the marker to the snapped coordinates
+      event.target.setLatLng(snappedLatLng);
 
       // Update the marker location on the server
       fetch('/marker', {
@@ -39,4 +48,5 @@ fetch('/map')
         headers: { 'Content-Type': 'application/json' },
       });
     });
+
   });
