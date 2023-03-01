@@ -62,6 +62,7 @@ function Map(): JSX.Element {
     coord.latitude,
     coord.longitude,
   ]);
+  // console.log(lineArray.slice(40, 200));
 
   return (
     <div className="Map">
@@ -90,6 +91,7 @@ function Map(): JSX.Element {
           ))}
 
           {/* Creating a line based on coords */}
+
           <Polyline positions={[lineArray]} />
         </MapContainer>
       </header>
