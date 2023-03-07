@@ -49,7 +49,7 @@ app.get("/trip", (req, res) => {
 // Get matched trip data
 app.get("/matched", (req, res) => {
   const query =
-    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 10;";
+    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 100;";
 
   var coords = [];
   // Send query to db connection
@@ -60,26 +60,53 @@ app.get("/matched", (req, res) => {
       coords = data;
       console.log("***PRINT COORD DATA***");
       console.log(coords);
+      // Create array in reverse format for API
+      let coordArray = coords.map(({ latitude, longitude }) => [
+        longitude,
+        latitude,
+      ]);
+      console.log(coordArray.toString());
+      let stringArray = coordArray.toString();
+      let n = 2;
+      let ch = ",";
+
+      let regex = new RegExp(
+        "((?:[^" + ch + "]*" + ch + "){" + (n - 1) + "}[^" + ch + "]*)" + ch,
+        "g"
+      );
+
+      let urlCoords = stringArray.replace(regex, "$1;");
+      console.log(urlCoords);
+      return res.json(urlCoords); // - PROBLEM
     }
   });
+});
 
-  axios
-    .get(
-      "http://router.project-osrm.org/route/v1/driving/33.787551958257,-84.359147478562;33.787571290927,-84.35914751250401;33.787598305876,-84.35915108828901?overview=false"
-    )
-    .then((response) => {
-      console.log(response.data);
-
-      var rawCoords = [];
-      coords.forEach((coordObj) => {
-        rawCoords.push(coordObj.latitude, coordObj.longitude);
+app.get("/snap", (req, res) => {
+  axios.get("http://localhost:8800/matched").then((response) => {
+    console.log(response.data);
+    let url = `http://router.project-osrm.org/match/v1/biking/${response.data}`;
+    console.log(url);
+    axios
+      .get(url)
+      .then((response2) => {
+        // only returns the snapped location
+        let snappedCoords = response2.data.tracepoints.map(
+          ({ location }) => location
+        );
+        // Reverse each coord so latitude is before longitude
+        snappedCoords.forEach((coord) => {
+          coord.reverse();
+          console.log(coord);
+        });
+        return res.json(snappedCoords);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
-      console.log("***PRINT RAW COORD DATA***");
-      console.log(rawCoords.toString());
-
-      return res.json(response.data);
-    });
+    // return res.json("ERROR");
+  });
 });
 
 app.listen(8800, () => {
