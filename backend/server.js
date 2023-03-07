@@ -37,7 +37,7 @@ app.get("/note", (req, res) => {
 app.get("/trip", (req, res) => {
   // Query to get all lat and long data from coords with matching trip_id and only starting at 50 max 150 coords
   const query =
-    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 150;";
+    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 600;";
 
   // Send query to db connection
   db.query(query, (err, data) => {
@@ -49,7 +49,7 @@ app.get("/trip", (req, res) => {
 // Get matched trip data
 app.get("/matched", (req, res) => {
   const query =
-    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 100;";
+    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 600;";
 
   var coords = [];
   // Send query to db connection
@@ -67,14 +67,14 @@ app.get("/matched", (req, res) => {
       ]);
       console.log(coordArray.toString());
       let stringArray = coordArray.toString();
+
+      // Replace every second comma with semi-colon to address API correctly
       let n = 2;
       let ch = ",";
-
       let regex = new RegExp(
         "((?:[^" + ch + "]*" + ch + "){" + (n - 1) + "}[^" + ch + "]*)" + ch,
         "g"
       );
-
       let urlCoords = stringArray.replace(regex, "$1;");
       console.log(urlCoords);
       return res.json(urlCoords); // - PROBLEM
@@ -85,13 +85,21 @@ app.get("/matched", (req, res) => {
 app.get("/snap", (req, res) => {
   axios.get("http://localhost:8800/matched").then((response) => {
     console.log(response.data);
-    let url = `http://router.project-osrm.org/match/v1/biking/${response.data}`;
+    let url = `http://localhost:5000/match/v1/biking/${response.data}`;
     console.log(url);
     axios
       .get(url)
       .then((response2) => {
-        // only returns the snapped location
-        let snappedCoords = response2.data.tracepoints.map(
+        // only returns the snapped location]
+        console.log(response2.data.tracepoints.some((item) => item === null));
+        let tracepoints = response2.data.tracepoints.filter(function (
+          tracepoint
+        ) {
+          return tracepoint !== null;
+        });
+        console.log(tracepoints.some((item) => item === undefined));
+        
+        let snappedCoords = tracepoints.map(
           ({ location }) => location
         );
         // Reverse each coord so latitude is before longitude
