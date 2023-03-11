@@ -37,7 +37,7 @@ app.get("/note", (req, res) => {
 app.get("/trip", (req, res) => {
   // Query to get all lat and long data from coords with matching trip_id and only starting at 50 max 150 coords
   const query =
-    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 600;";
+    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76;";
 
   // Send query to db connection
   db.query(query, (err, data) => {
@@ -49,7 +49,7 @@ app.get("/trip", (req, res) => {
 // Get matched trip data
 app.get("/matched", (req, res) => {
   const query =
-    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76 LIMIT 50, 600;";
+    "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76;";
 
   var coords = [];
   // Send query to db connection
@@ -98,10 +98,8 @@ app.get("/snap", (req, res) => {
           return tracepoint !== null;
         });
         console.log(tracepoints.some((item) => item === undefined));
-        
-        let snappedCoords = tracepoints.map(
-          ({ location }) => location
-        );
+
+        let snappedCoords = tracepoints.map(({ location }) => location);
         // Reverse each coord so latitude is before longitude
         snappedCoords.forEach((coord) => {
           coord.reverse();
