@@ -4,7 +4,7 @@ import Map from "./Map";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/stressed">
       <Routes>
         <Route path="/" element={<Map />} />
       </Routes>
