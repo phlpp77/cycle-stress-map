@@ -85,7 +85,7 @@ app.get("/matched", (req, res) => {
 app.get("/snap", (req, res) => {
   axios.get("http://localhost:8800/matched").then((response) => {
     console.log(response.data);
-    let url = `http://localhost:5000/match/v1/biking/${response.data}`;
+    let url = `http://localhost:5000/match/v1/foot/${response.data}`;
     console.log(url);
     axios
       .get(url)
