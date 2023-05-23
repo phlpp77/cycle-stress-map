@@ -1,7 +1,7 @@
-import express from "express";
-import mysql from "mysql";
-import cors from "cors";
-import axios from "axios";
+const express = require("express");
+const mysql = require("mysql");
+const cors = require("cors");
+const axios = require("axios");
 
 // Set up express.js server
 const app = express();
@@ -83,7 +83,7 @@ app.get("/matched", (req, res) => {
 });
 
 app.get("/snap", (req, res) => {
-  axios.get("http://localhost:8800/matched").then((response) => {
+  axios.get("http://localhost:4000/matched").then((response) => {
     console.log(response.data);
     let url = `http://localhost:5000/match/v1/foot/${response.data}`;
     console.log(url);
@@ -115,6 +115,6 @@ app.get("/snap", (req, res) => {
   });
 });
 
-app.listen(8800, () => {
+app.listen(4000, () => {
   console.log("Connection to backend successful.");
 });
