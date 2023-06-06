@@ -58,7 +58,7 @@ function Map(): JSX.Element {
     fetchTripWithID();
   }, []);
 
-  // Fetch all snappedCoords from server
+  // Fetch all snappedCoords from server used to put on the streetgrid
   useEffect(() => {
     const fetchAllSnapCoords = async () => {
       try {
@@ -76,11 +76,15 @@ function Map(): JSX.Element {
     coord.latitude,
     coord.longitude,
   ]);
+
+  // Test data with raw coordinates
   const rawArray: LatLngExpression[] = [
     [33.787551958257, -84.359147478562],
     [33.787571290927, -84.35914751250401],
     [33.787598305876, -84.35915108828901],
   ];
+
+  // Test data with snapped coordinates
   const testArray: LatLngExpression[] = [
     [33.787606, -84.359147],
     [33.787606, -84.359148],
@@ -97,21 +101,26 @@ function Map(): JSX.Element {
   return (
     <div className="Map">
       <header className="Map-header">
+
+        {/* Header */}
         <h2>
           <b>Stress Map</b> <code>[unstable prototype]</code>
         </h2>
 
+{/* Map container form Leaflet */}
         <MapContainer
           center={[33.753746, -84.38633]}
           zoom={13}
           scrollWheelZoom={true}
         >
+
+          {/* Get required title/map design from openstreetmap */}
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
 
-          {/* Placing markers at note positions */}
+          {/* Placing markers at note positions (incl. the node as text*/}
           {coords.map((coord) => (
             <Marker position={[coord.latitude, coord.longitude]} key={coord.id}>
               <Popup>
@@ -120,10 +129,10 @@ function Map(): JSX.Element {
             </Marker>
           ))}
 
-          {/* Creating a line based on coords */}
-
+          {/* Creating lines (snapped) based on coords */}
           <Polyline positions={[lineArray]} color="red" />
           <Polyline positions={[snapCoords]} color="green" />
+          
         </MapContainer>
       </header>
     </div>
