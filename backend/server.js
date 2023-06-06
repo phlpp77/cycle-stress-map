@@ -6,6 +6,7 @@ const axios = require("axios");
 // Set up express.js server
 const app = express();
 
+// TODO: Create remote db
 // Set up MySQL database
 const db = mysql.createConnection({
   host: "localhost",
@@ -17,11 +18,12 @@ const db = mysql.createConnection({
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
+// Test response to check if server is running and available 
+app.get("/test", (req, res) => {
   res.json("Backend reached.");
 });
 
-// Get notes
+// Get all notes that were entered on Cycle ATL data
 app.get("/note", (req, res) => {
   // Query to get all lat and long data from note table
   const query = "SELECT id, latitude, longitude, details FROM note";
@@ -33,7 +35,7 @@ app.get("/note", (req, res) => {
   });
 });
 
-// Get trip with certain trip_id
+// Get trip coordinates with certain trip_id
 app.get("/trip", (req, res) => {
   // Query to get all lat and long data from coords with matching trip_id and only starting at 50 max 150 coords
   const query =
@@ -46,7 +48,7 @@ app.get("/trip", (req, res) => {
   });
 });
 
-// Get matched trip data
+// Get data to be matched with OSRM 
 app.get("/matched", (req, res) => {
   const query =
     "SELECT trip_id, latitude, longitude FROM coord WHERE trip_id=76;";
@@ -82,6 +84,7 @@ app.get("/matched", (req, res) => {
   });
 });
 
+// Snap data with OSRM to streetgrid of Atlanta
 app.get("/snap", (req, res) => {
   axios.get("http://localhost:4000/matched").then((response) => {
     console.log(response.data);
@@ -115,6 +118,7 @@ app.get("/snap", (req, res) => {
   });
 });
 
+// Open the port 4000 to listen to requests
 app.listen(4000, () => {
   console.log("Connection to backend successful.");
 });
